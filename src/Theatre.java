@@ -5,11 +5,13 @@ import java.util.*;
  */
 public class Theatre {
     private final String theatreName;
-    private List<Seat> seats = new ArrayList<>();
+    // public arraylist of seats
+    public List<Seat> seats = new ArrayList<>();
 
     public Theatre(String theatreName, int numRows, int seatsPerRow) {
         this.theatreName = theatreName;
 
+        // create seats
         int lastRow = 'A' + (numRows -1);
         for (char row = 'A'; row <= lastRow; row++) {
             for(int seatNum = 1; seatNum <= seatsPerRow; seatNum++) {
@@ -52,7 +54,8 @@ public class Theatre {
         }
     }
 
-    private class Seat implements Comparable<Seat> {
+    public class Seat implements Comparable<Seat> {
+        // local variables
         private final String seatNumber;
         private boolean reserved = false;
 
@@ -61,10 +64,12 @@ public class Theatre {
         }
 
         @Override
+        // compares based on seatNumber
         public int compareTo(Seat seat) {
             return this.seatNumber.compareToIgnoreCase(seat.getSeatNumber());
         }
 
+        // reserves a seat
         public boolean reserve() {
             if(!this.reserved) {
                 this.reserved = true;
@@ -75,6 +80,7 @@ public class Theatre {
             }
         }
 
+        // cancels a reservations
         public boolean cancel() {
             if(this.reserved) {
                 this.reserved = false;
@@ -89,23 +95,5 @@ public class Theatre {
             return seatNumber;
         }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 }
