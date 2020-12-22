@@ -5,12 +5,13 @@ import java.util.*;
  */
 public class Theatre {
     private final String theatreName;
-    private List<Seat> seats = new ArrayList<>();
+    // public arraylist of seats
+    public List<Seat> seats = new ArrayList<>();
 
     public Theatre(String theatreName, int numRows, int seatsPerRow) {
         this.theatreName = theatreName;
 
-        // Creates the rows with row numbers
+        // create seats
         int lastRow = 'A' + (numRows -1);
         for (char row = 'A'; row <= lastRow; row++) {
             for(int seatNum = 1; seatNum <= seatsPerRow; seatNum++) {
@@ -25,21 +26,25 @@ public class Theatre {
     }
 
     public boolean reserveSeat(String seatNumber) {
-        Seat requestedSeat = null;
-        for(Seat seat : seats) {
-            if(seat.getSeatNumber().equals(seatNumber)) {
-                requestedSeat = seat;
-                break;
+        int low = 0;
+        int high = seats.size()-1;
+
+        while (low <= high) {
+            System.out.print(".");
+            int mid = (low + high) / 2;
+            Seat midVal = seats.get(mid);
+            int cmp = midVal.getSeatNumber().compareTo(seatNumber);
+
+            if (cmp < 0) {
+                low = mid + 1;
+            } else if (cmp > 0) {
+                high = mid - 1;
+            } else {
+                return seats.get(mid).reserve();
             }
         }
-
-        if(requestedSeat == null) {
-            System.out.println("There is no seat " + seatNumber);
-            return false;
-        }
-
-        // call the reserve seat method in the inner class for the seat, set reserved var to true
-        return requestedSeat.reserve();
+        System.out.println("There is no seat " + seatNumber);
+        return false;
     }
 
     // for testing
@@ -49,8 +54,8 @@ public class Theatre {
         }
     }
 
-    // Inner class Seat
-    private class Seat {
+    public class Seat implements Comparable<Seat> {
+        // local variables
         private final String seatNumber;
         private boolean reserved = false;
 
@@ -58,6 +63,13 @@ public class Theatre {
             this.seatNumber = seatNumber;
         }
 
+        @Override
+        // compares based on seatNumber
+        public int compareTo(Seat seat) {
+            return this.seatNumber.compareToIgnoreCase(seat.getSeatNumber());
+        }
+
+        // reserves a seat
         public boolean reserve() {
             if(!this.reserved) {
                 this.reserved = true;
@@ -68,6 +80,7 @@ public class Theatre {
             }
         }
 
+        // cancels a reservations
         public boolean cancel() {
             if(this.reserved) {
                 this.reserved = false;
